@@ -1,44 +1,51 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+// Render/CRA için: REACT_APP_BACKEND_URL örn: https://xxx.onrender.com
+// Senin mevcut: process.env.REACT_APP_BACKEND_URL
+const RAW = process.env.REACT_APP_BACKEND_URL;
 
+// baseURL: `${API_URL}/api`
 const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  baseURL: RAW ? `${RAW.replace(/\/$/, "")}/api` : "/api",
+  withCredentials: false, // TOKEN bazlı auth kullanıyorsun -> false
+  headers: { "Content-Type": "application/json" },
 });
 
-// Add token to requests
+// Token’ı her request’e ekle
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('vetflow_token');
+  const token = localStorage.getItem("vetflow_token");
   if (token) {
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// Handle auth errors
+// 401’de hard redirect YOK (bu seni login'e çakılıyor gibi gösteriyor)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('vetflow_token');
-      localStorage.removeItem('vetflow_user');
-      window.location.href = '/login';
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      localStorage.removeItem("vetflow_token");
+      localStorage.removeItem("vetflow_user");
+
+      // AuthContext / App tarafında dinlemek için event
+      window.dispatchEvent(new Event("vetflow:logout"));
     }
+
     return Promise.reject(error);
   }
 );
 
 // Auth API
 export const authAPI = {
-  register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
-  googleAuth: (sessionId) => api.post('/auth/google', { session_id: sessionId }),
-  getMe: () => api.get('/auth/me'),
-  logout: () => api.post('/auth/logout')
+  register: (data) => api.post("/auth/register", data),
+  login: (data) => api.post("/auth/login", data),
+  googleAuth: (sessionId) => api.post("/auth/google", { session_id: sessionId }),
+  getMe: () => api.get("/auth/me"),
+  logout: () => api.post("/auth/logout"),
 };
 
 // Customers API
