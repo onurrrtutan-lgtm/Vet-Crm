@@ -1,98 +1,116 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../lib/api';
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
+import { authAPI } from "../lib/api";
 
 const AuthContext = createContext(null);
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  return ctx;
 };
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const checkAuth = async () => {
-    const token = localStorage.getItem('vetflow_token');
-    const savedUser = localStorage.getItem('vetflow_user');
-    
-    if (token && savedUser) {
+  const clearAuth = () => {
+    localStorage.removeItem("vetflow_token");
+    localStorage.removeItem("vetflow_user");
+    setUser(null);
+  };
+
+  const checkAuth = useCallback(async () => {
+    setLoading(true);
+    const token = localStorage.getItem("vetflow_token");
+    const savedUser = localStorage.getItem("vetflow_user");
+
+    // token yoksa direkt bitir
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    // hızlı UI için: saved user varsa anında set et
+    if (savedUser) {
       try {
-        const response = await authAPI.getMe();
-        setUser(response.data);
-        localStorage.setItem('vetflow_user', JSON.stringify(response.data));
-      } catch (error) {
-        localStorage.removeItem('vetflow_token');
-        localStorage.removeItem('vetflow_user');
-        setUser(null);
+        setUser(JSON.parse(savedUser));
+      } catch {
+        // ignore
       }
     }
-    setLoading(false);
-  };
+
+    // gerçek doğrulama
+    try {
+      const response = await authAPI.getMe();
+      setUser(response.data);
+      localStorage.setItem("vetflow_user", JSON.stringify(response.data));
+    } catch (e) {
+      clearAuth();
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     checkAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [checkAuth]);
 
   const login = async (email, password) => {
     const response = await authAPI.login({ email, password });
     const { access_token, user: userData } = response.data;
-    
-    localStorage.setItem('vetflow_token', access_token);
-    localStorage.setItem('vetflow_user', JSON.stringify(userData));
+
+    localStorage.setItem("vetflow_token", access_token);
+    localStorage.setItem("vetflow_user", JSON.stringify(userData));
     setUser(userData);
-    
+
     return userData;
   };
 
   const register = async (data) => {
     const response = await authAPI.register(data);
     const { access_token, user: userData } = response.data;
-    
-    localStorage.setItem('vetflow_token', access_token);
-    localStorage.setItem('vetflow_user', JSON.stringify(userData));
+
+    localStorage.setItem("vetflow_token", access_token);
+    localStorage.setItem("vetflow_user", JSON.stringify(userData));
     setUser(userData);
-    
+
     return userData;
   };
 
   const googleAuth = async (sessionId) => {
     const response = await authAPI.googleAuth(sessionId);
     const { access_token, user: userData } = response.data;
-    
-    localStorage.setItem('vetflow_token', access_token);
-    localStorage.setItem('vetflow_user', JSON.stringify(userData));
+
+    localStorage.setItem("vetflow_token", access_token);
+    localStorage.setItem("vetflow_user", JSON.stringify(userData));
     setUser(userData);
-    
+
     return userData;
   };
 
   const logout = async () => {
     try {
       await authAPI.logout();
-    } catch (error) {
-      // Ignore logout errors
+    } catch {
+      // ignore
     }
-    localStorage.removeItem('vetflow_token');
-    localStorage.removeItem('vetflow_user');
-    setUser(null);
+    clearAuth();
   };
 
-  return (
-    <AuthContext.Provider value={{
+  const value = useMemo(
+    () => ({
       user,
       loading,
       login,
       register,
       googleAuth,
       logout,
-      isAuthenticated: !!user
-    }}>
-      {children}
-    </AuthContext.Provider>
+      isAuthenticated: !!user,
+      refreshAuth: checkAuth,
+    }),
+    [user, loading, checkAuth]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
