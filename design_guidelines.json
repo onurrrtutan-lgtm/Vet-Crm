@@ -1,0 +1,199 @@
+{
+  "identity": {
+    "name": "VetFlow",
+    "persona": "The Modern Veterinary OS",
+    "tone": "Professional, Empathetic, Efficient, Clean",
+    "description": "A veterinary practice management system that blends clinical precision with human warmth. It reduces cognitive load for busy vets while providing a comforting, trustworthy interface for pet owners."
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Public Sans, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "sizes": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl font-semibold",
+      "body_lg": "text-lg leading-relaxed",
+      "body_base": "text-base leading-relaxed",
+      "caption": "text-sm text-muted-foreground"
+    },
+    "instructions": "Use Manrope for all headings to establish a modern, friendly but technical feel. Use Public Sans for dense data tables and records for maximum legibility. Avoid generic Inter for headings."
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Deep Jungle",
+        "hex": "#0F4C5C",
+        "tailwind": "bg-[#0F4C5C] text-white hover:bg-[#0A3A46]"
+      },
+      "secondary": {
+        "name": "Sage Mist",
+        "hex": "#E0ECE4",
+        "tailwind": "bg-[#E0ECE4] text-[#0F4C5C]"
+      },
+      "accent": {
+        "name": "Living Coral",
+        "hex": "#FF6B6B",
+        "tailwind": "bg-[#FF6B6B] text-white"
+      },
+      "background": {
+        "light": "#F8F9FA",
+        "dark": "#0D1117"
+      },
+      "surface": {
+        "light": "#FFFFFF",
+        "dark": "#161B22"
+      },
+      "text": {
+        "primary": "#1A202C",
+        "secondary": "#718096"
+      }
+    },
+    "theme_strategy": "Organic & Earthy (Archetype 1). The primary Deep Jungle Green (#0F4C5C) conveys medical authority without the coldness of standard blue. The Sage Mist (#E0ECE4) provides a calming secondary layer. Living Coral (#FF6B6B) is used sparingly for alerts and high-priority actions (like 'Emergency' or 'Overdue').",
+    "css_vars": {
+      "light": {
+        "--background": "210 20% 98%",
+        "--foreground": "222 47% 11%",
+        "--card": "0 0% 100%",
+        "--card-foreground": "222 47% 11%",
+        "--popover": "0 0% 100%",
+        "--popover-foreground": "222 47% 11%",
+        "--primary": "192 71% 21%",
+        "--primary-foreground": "210 40% 98%",
+        "--secondary": "140 25% 90%",
+        "--secondary-foreground": "192 71% 21%",
+        "--muted": "210 40% 96.1%",
+        "--muted-foreground": "215.4 16.3% 46.9%",
+        "--accent": "140 25% 90%",
+        "--accent-foreground": "192 71% 21%",
+        "--destructive": "0 84.2% 60.2%",
+        "--destructive-foreground": "210 40% 98%",
+        "--border": "214.3 31.8% 91.4%",
+        "--input": "214.3 31.8% 91.4%",
+        "--ring": "192 71% 21%",
+        "--radius": "0.5rem"
+      },
+      "dark": {
+        "--background": "222 47% 11%",
+        "--foreground": "210 40% 98%",
+        "--card": "222 47% 11%",
+        "--card-foreground": "210 40% 98%",
+        "--popover": "222 47% 11%",
+        "--popover-foreground": "210 40% 98%",
+        "--primary": "192 71% 21%",
+        "--primary-foreground": "210 40% 98%",
+        "--secondary": "217.2 32.6% 17.5%",
+        "--secondary-foreground": "210 40% 98%",
+        "--muted": "217.2 32.6% 17.5%",
+        "--muted-foreground": "215 20.2% 65.1%",
+        "--accent": "217.2 32.6% 17.5%",
+        "--accent-foreground": "210 40% 98%",
+        "--destructive": "0 62.8% 30.6%",
+        "--destructive-foreground": "210 40% 98%",
+        "--border": "217.2 32.6% 17.5%",
+        "--input": "217.2 32.6% 17.5%",
+        "--ring": "212.7 26.8% 83.9%"
+      }
+    }
+  },
+  "layout": {
+    "grid_system": {
+      "dashboard": "grid grid-cols-1 md:grid-cols-12 gap-6 p-6 md:p-8",
+      "card_grid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6",
+      "detail_view": "grid grid-cols-1 lg:grid-cols-3 gap-8"
+    },
+    "spacing": {
+      "container_padding": "p-6 md:p-10",
+      "section_gap": "gap-8 md:gap-12",
+      "internal_padding": "p-6"
+    },
+    "containers": {
+      "main": "max-w-7xl mx-auto w-full",
+      "narrow": "max-w-3xl mx-auto w-full"
+    },
+    "strategies": [
+      "Use the 'Control Room' grid for the main dashboard: High density, data correlation.",
+      "Use 'Bento' style layouts for patient summaries (mixing photos, stats, and quick actions).",
+      "Always use generous padding inside cards (p-6) to prevent the 'cramped data' look common in medical apps."
+    ]
+  },
+  "components": {
+    "buttons": {
+      "style": "rounded-md font-medium transition-all duration-200 active:scale-95",
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      "ghost": "hover:bg-accent hover:text-accent-foreground"
+    },
+    "cards": {
+      "style": "bg-card text-card-foreground rounded-lg border border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200",
+      "glass": "bg-white/80 dark:bg-black/60 backdrop-blur-md border border-white/20 shadow-lg"
+    },
+    "inputs": {
+      "style": "rounded-md border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    },
+    "navigation": {
+      "sidebar": "bg-card border-r border-border h-screen sticky top-0",
+      "navbar": "border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-sm for cards, shadow-md for hover states, shadow-xl for modals.",
+    "borders": "Subtle 1px borders (border-border/60) to define structure without harsh lines.",
+    "glassmorphism": "Use sparingly on sticky headers and modal overlays for a modern touch.",
+    "icons": "Use Lucide React icons. Stroke width 1.5px for a refined, clinical look.",
+    "radius": "rounded-lg (0.5rem) for cards, rounded-md for buttons/inputs."
+  },
+  "motion": {
+    "transitions": "transition-all duration-200 ease-in-out",
+    "hover_effects": "Subtle lift (-translate-y-0.5) on interactive cards.",
+    "page_load": "Fade in with slight upward slide (opacity-0 translate-y-4 -> opacity-100 translate-y-0).",
+    "micro_interactions": "Button press scale (0.98), input focus ring expansion."
+  },
+  "images": {
+    "hero_vet": {
+      "url": "https://images.unsplash.com/photo-1625321171045-1fea4ac688e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHx2ZXRlcmluYXJpYW4lMjBleGFtaW5pbmclMjBkb2d8ZW58MHx8fHwxNzY3ODU3MjgxfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Veterinarian examining a dog",
+      "usage": "Landing page hero, Login screen side image"
+    },
+    "patient_cat": {
+      "url": "https://images.unsplash.com/photo-1610000735541-60135d7ad692?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxjYXQlMjBpbiUyMHZldGVyaW5hcnklMjBjbGluaWN8ZW58MHx8fHwxNzY3ODU3MjgyfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Cat on examination table",
+      "usage": "Patient records placeholder, Service section"
+    },
+    "clinic_interior": {
+      "url": "https://images.unsplash.com/photo-1669930605340-801a0be1f5a3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwyfHxtb2Rlcm4lMjB2ZXRlcmluYXJ5JTIwY2xpbmljJTIwaW50ZXJpb3J8ZW58MHx8fHwxNzY3ODU3Mjg0fDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern veterinary clinic interior",
+      "usage": "About page, Dashboard background accent"
+    },
+    "happy_owner": {
+      "url": "https://images.unsplash.com/photo-1598264900290-6e248199af06?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHx2ZXRlcmluYXJpYW4lMjBleGFtaW5pbmclMjBkb2d8ZW58MHx8fHwxNzY3ODU3MjgxfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Happy owner with dog",
+      "usage": "Testimonials, Client portal welcome"
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure all text meets WCAG AA standards. Use dark text on light backgrounds.",
+    "focus_states": "Visible focus rings on all interactive elements.",
+    "semantic_html": "Use proper heading hierarchy (h1-h6), buttons for actions, links for navigation.",
+    "aria_labels": "Add aria-labels to icon-only buttons."
+  },
+  "universal_guidelines": [
+    "Do not use gradients for text or backgrounds unless specifically for a 'glass' effect.",
+    "Avoid 'medical blue' (#007bff). Use the custom Deep Jungle Green for a unique brand identity.",
+    "All interactive elements must have a data-testid attribute.",
+    "Use 'sonner' for toast notifications.",
+    "Prioritize 'Shadcn' components but customize the radius and shadows to match the 'Soft Utility' theme.",
+    "Never use 'Inter' for headings. Use 'Manrope'.",
+    "Ensure mobile responsiveness for all dashboard views (stack columns on mobile)."
+  ],
+  "instructions_to_main_agent": "You are building a high-fidelity SaaS. Follow these guidelines strictly. Start by setting up the global CSS variables in index.css to match the 'Organic & Earthy' theme. Then, configure tailwind.config.js to use these variables. When building pages, use the 'Control Room' grid strategy for the dashboard and 'Bento' grids for summaries. Use the provided image URLs for placeholders. Ensure all components are accessible and responsive."
+}
