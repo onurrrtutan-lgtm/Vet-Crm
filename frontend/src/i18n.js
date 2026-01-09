@@ -1,13 +1,39 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-i18n.use(initReactI18next).init({
-  resources,
-  lng: localStorage.getItem("vetflow_language") || "tr",
-  fallbackLng: "tr",
-  interpolation: { escapeValue: false },
-  react: { useSuspense: false },
-});
+/**
+ * Basit ve güvenli i18n init
+ * Circular / hoisting / dynamic issue YOK
+ */
+
+const resources = {
+  tr: {
+    translation: {
+      login: "Giriş Yap",
+      logout: "Çıkış Yap",
+      dashboard: "Panel",
+    },
+  },
+  en: {
+    translation: {
+      login: "Login",
+      logout: "Logout",
+      dashboard: "Dashboard",
+    },
+  },
+};
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: "tr",
+    fallbackLng: "tr",
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
 
 
 
