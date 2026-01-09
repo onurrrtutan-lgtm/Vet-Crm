@@ -5,12 +5,8 @@ i18n.use(initReactI18next).init({
   resources,
   lng: localStorage.getItem("vetflow_language") || "tr",
   fallbackLng: "tr",
-  interpolation: {
-    escapeValue: false,
-  },
-  react: {
-    useSuspense: false,
-  },
+  interpolation: { escapeValue: false },
+  react: { useSuspense: false },
 });
 
 
