@@ -1,4 +1,5 @@
 import axios from 'axios';
+import React, { Suspense } from "react";
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -9,6 +10,12 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 });
+<BrowserRouter>
+  <Suspense fallback={<div className="p-6">Yükleniyor...</div>}>
+    <AppRouter />
+  </Suspense>
+</BrowserRouter>
+
 
 // Add token to requests
 api.interceptors.request.use((config) => {

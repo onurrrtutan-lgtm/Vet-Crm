@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Render/CRA için: REACT_APP_BACKEND_URL örn: https://xxx.onrender.com
 // Senin mevcut: process.env.REACT_APP_BACKEND_URL
-const RAW = process.env.REACT_APP_BACKEND_URL;
+const RAW = process.env.REACT_APP_BACKEND_URL || "https://vet-crm-fc39.onrender.com";
+
 
 // baseURL: `${API_URL}/api`
 const api = axios.create({
