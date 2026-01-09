@@ -1,14 +1,25 @@
 import axios from "axios";
 
-// Render/CRA için: REACT_APP_BACKEND_URL örn: https://xxx.onrender.com
-// Senin mevcut: process.env.REACT_APP_BACKEND_URL
-const RAW = process.env.REACT_APP_BACKEND_URL || "https://vet-crm-fc39.onrender.com";
+/**
+ * Render bazen env var'ı "undefined" / "null" string olarak set edebiliyor.
+ * Bu yüzden sadece "var mı" diye değil, gerçekten URL mi diye kontrol ediyoruz.
+ */
+const RAW_ENV = process.env.REACT_APP_BACKEND_URL;
 
+const RAW =
+  typeof RAW_ENV === "string" &&
+  RAW_ENV.trim() !== "" &&
+  RAW_ENV.trim().toLowerCase() !== "undefined" &&
+  RAW_ENV.trim().toLowerCase() !== "null"
+    ? RAW_ENV.trim()
+    : "https://vet-crm-fc39.onrender.com";
 
-// baseURL: `${API_URL}/api`
+// baseURL her zaman: https://.../api (sonunda slash olmasın)
+const BASE_URL = `${RAW.replace(/\/$/, "")}/api`;
+
 const api = axios.create({
-  baseURL: RAW ? `${RAW.replace(/\/$/, "")}/api` : "/api",
-  withCredentials: false, // TOKEN bazlı auth kullanıyorsun -> false
+  baseURL: BASE_URL,
+  withCredentials: false, // token bazlı auth -> false
   headers: { "Content-Type": "application/json" },
 });
 
@@ -22,7 +33,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// 401’de hard redirect YOK (bu seni login'e çakılıyor gibi gösteriyor)
+// 401’de hard redirect yok
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -31,8 +42,6 @@ api.interceptors.response.use(
     if (status === 401) {
       localStorage.removeItem("vetflow_token");
       localStorage.removeItem("vetflow_user");
-
-      // AuthContext / App tarafında dinlemek için event
       window.dispatchEvent(new Event("vetflow:logout"));
     }
 
@@ -51,99 +60,101 @@ export const authAPI = {
 
 // Customers API
 export const customersAPI = {
-  getAll: (search) => api.get('/customers', { params: { search } }),
+  getAll: (search) => api.get("/customers", { params: { search } }),
   getOne: (id) => api.get(`/customers/${id}`),
-  create: (data) => api.post('/customers', data),
+  create: (data) => api.post("/customers", data),
   update: (id, data) => api.put(`/customers/${id}`, data),
-  delete: (id) => api.delete(`/customers/${id}`)
+  delete: (id) => api.delete(`/customers/${id}`),
 };
 
 // Pets API
 export const petsAPI = {
-  getAll: (customerId) => api.get('/pets', { params: { customer_id: customerId } }),
+  getAll: (customerId) => api.get("/pets", { params: { customer_id: customerId } }),
   getOne: (id) => api.get(`/pets/${id}`),
   getHistory: (id) => api.get(`/pets/${id}/history`),
-  create: (data) => api.post('/pets', data),
+  create: (data) => api.post("/pets", data),
   update: (id, data) => api.put(`/pets/${id}`, data),
-  delete: (id) => api.delete(`/pets/${id}`)
+  delete: (id) => api.delete(`/pets/${id}`),
 };
 
 // Health Records API
 export const healthRecordsAPI = {
-  getAll: (petId) => api.get('/health-records', { params: { pet_id: petId } }),
-  create: (data) => api.post('/health-records', data)
+  getAll: (petId) => api.get("/health-records", { params: { pet_id: petId } }),
+  create: (data) => api.post("/health-records", data),
 };
 
 // Appointments API
 export const appointmentsAPI = {
-  getAll: (params) => api.get('/appointments', { params }),
+  getAll: (params) => api.get("/appointments", { params }),
   getDetails: (id) => api.get(`/appointments/${id}/details`),
-  create: (data) => api.post('/appointments', data),
+  create: (data) => api.post("/appointments", data),
   update: (id, data) => api.put(`/appointments/${id}`, data),
   delete: (id) => api.delete(`/appointments/${id}`),
-  cancel: (id) => api.post(`/appointments/${id}/cancel`)
+  cancel: (id) => api.post(`/appointments/${id}/cancel`),
 };
 
 // Products API
 export const productsAPI = {
-  getAll: (category) => api.get('/products', { params: { category } }),
-  create: (data) => api.post('/products', data),
+  getAll: (category) => api.get("/products", { params: { category } }),
+  create: (data) => api.post("/products", data),
   update: (id, data) => api.put(`/products/${id}`, data),
-  delete: (id) => api.delete(`/products/${id}`)
+  delete: (id) => api.delete(`/products/${id}`),
 };
 
 // Pet Product Usage API
 export const petProductUsageAPI = {
-  getAll: (petId) => api.get('/pet-product-usage', { params: { pet_id: petId } }),
-  create: (data) => api.post('/pet-product-usage', data)
+  getAll: (petId) => api.get("/pet-product-usage", { params: { pet_id: petId } }),
+  create: (data) => api.post("/pet-product-usage", data),
 };
 
 // Reminders API
 export const remindersAPI = {
-  getAll: (sent) => api.get('/reminders', { params: { sent } }),
-  create: (data) => api.post('/reminders', data),
-  delete: (id) => api.delete(`/reminders/${id}`)
+  getAll: (sent) => api.get("/reminders", { params: { sent } }),
+  create: (data) => api.post("/reminders", data),
+  delete: (id) => api.delete(`/reminders/${id}`),
 };
 
 // Transactions API
 export const transactionsAPI = {
-  getAll: (params) => api.get('/transactions', { params }),
-  create: (data) => api.post('/transactions', data),
-  getSummary: (params) => api.get('/finance/summary', { params })
+  getAll: (params) => api.get("/transactions", { params }),
+  create: (data) => api.post("/transactions", data),
+  getSummary: (params) => api.get("/finance/summary", { params }),
 };
 
 // WhatsApp API
 export const whatsappAPI = {
-  getMessages: (phone) => api.get('/whatsapp/messages', { params: { phone } }),
-  sendMessage: (phone, message) => api.post('/whatsapp/send', { phone, message })
+  getMessages: (phone) => api.get("/whatsapp/messages", { params: { phone } }),
+  sendMessage: (phone, message) => api.post("/whatsapp/send", { phone, message }),
 };
 
 // AI Settings API
 export const aiSettingsAPI = {
-  get: () => api.get('/ai-settings'),
-  update: (data) => api.put('/ai-settings', data)
+  get: () => api.get("/ai-settings"),
+  update: (data) => api.put("/ai-settings", data),
 };
 
 // Dashboard API
 export const dashboardAPI = {
-  getStats: () => api.get('/dashboard/stats')
+  getStats: () => api.get("/dashboard/stats"),
 };
 
 // Subscription API
 export const subscriptionAPI = {
-  getPlans: () => api.get('/subscription/plans'),
-  getCurrent: () => api.get('/subscription/current'),
-  getLimits: () => api.get('/subscription/limits'),
-  startTrial: () => api.post('/subscription/start-trial'),
-  createCheckout: (planId) => api.post('/subscription/checkout', {
-    plan_id: planId,
-    origin_url: window.location.origin
-  }),
-  createResponsePackCheckout: (packId) => api.post('/subscription/response-pack/checkout', {
-    pack_id: packId,
-    origin_url: window.location.origin
-  }),
-  getPaymentStatus: (sessionId) => api.get(`/subscription/payment/status/${sessionId}`)
+  getPlans: () => api.get("/subscription/plans"),
+  getCurrent: () => api.get("/subscription/current"),
+  getLimits: () => api.get("/subscription/limits"),
+  startTrial: () => api.post("/subscription/start-trial"),
+  createCheckout: (planId) =>
+    api.post("/subscription/checkout", {
+      plan_id: planId,
+      origin_url: window.location.origin,
+    }),
+  createResponsePackCheckout: (packId) =>
+    api.post("/subscription/response-pack/checkout", {
+      pack_id: packId,
+      origin_url: window.location.origin,
+    }),
+  getPaymentStatus: (sessionId) => api.get(`/subscription/payment/status/${sessionId}`),
 };
 
 export default api;
